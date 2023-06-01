@@ -26,15 +26,11 @@ pipeline {
                 script {
                     sh "mkdir -p /var/www/html/${env.folderName}"
                     sh "unzip ${env.folderName}.zip -d /var/www/html/${env.folderName}"
-                }
-            }
-        }
-        
-        stage('Start Application') {
-            steps {
-                script {
-                    sh "cd /var/www/html/${env.folderName}"
-                    sh "nohup python app.py &"
+                    sh "sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/${env.folderName}.conf"
+                    sh "sudo sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/${env.folderName}|' /etc/apache2/sites-available/${env.folderName}.conf"
+                    sh "sudo sed -i 's|</VirtualHost>|    ProxyPass / http://127.0.0.1:5000/\n    ProxyPassReverse / http://127.0.0.1:5000/\n</VirtualHost>|' /etc/apache2/sites-available/${env.folderName}.conf"
+                    sh "sudo a2ensite ${env.folderName}.conf"
+                    sh "sudo systemctl restart apache2"
                 }
             }
         }
@@ -42,7 +38,7 @@ pipeline {
         stage('Create Soft Link') {
             steps {
                 script {
-                    sh "ln -s /var/www/html/${env.folderName} /var/www/html/current"
+                    sh "sudo ln -s /var/www/html/${env.folderName} /var/www/html/current"
                 }
             }
         }
