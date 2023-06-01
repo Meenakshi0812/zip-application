@@ -8,10 +8,12 @@ pipeline {
                 sh 'git clone --depth 1 https://github.com/Meenakshi0812/zip-application.git app.zip'
                 
                 // Generate folder name based on timestamp
-                def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
+                script {
+                    def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
                 
-                // Unzip the code to www/var/html path
-                sh "unzip -q app.zip -d /var/www/html/${folderName}"
+                    // Unzip the code to www/var/html path
+                    sh "unzip -q app.zip -d /var/www/html/${folderName}"
+                }
             }
         }
         
