@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     def timeStamp = new Date().format("yyyy-MM-dd-HH-mm-ss")
-                    def folderName = "${timeStamp}"
+                    def folderName = timeStamp
                     sh "git clone https://github.com/Meenakshi0812/zip-application.git ${folderName}"
                 }
             }
@@ -16,11 +16,12 @@ pipeline {
             steps {
                 script {
                     def timeStamp = new Date().format("yyyy-MM-dd-HH-mm-ss")
-                    def folderName = "${timeStamp}"
+                    def folderName = timeStamp
                     def zipFileName = "${folderName}.zip"
+                    def sourcePath = "${folderName}/${zipFileName}"
                     def destinationPath = "/var/www/html/${folderName}/"
 
-                    sh "cp ${zipFileName} ${destinationPath}"
+                    sh "cp ${sourcePath} ${destinationPath}"
                     dir(destinationPath) {
                         sh "unzip ${zipFileName}"
                         sh "rm ${zipFileName}"
@@ -33,7 +34,7 @@ pipeline {
             steps {
                 script {
                     def timeStamp = new Date().format("yyyy-MM-dd-HH-mm-ss")
-                    def folderName = "${timeStamp}"
+                    def folderName = timeStamp
                     def sourcePath = "/var/www/html/${folderName}"
                     def destinationPath = "/var/www/html/latest"
                     def indexFilePath = "/var/www/html/index.html"
