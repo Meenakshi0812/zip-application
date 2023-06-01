@@ -8,12 +8,17 @@ pipeline {
             }
         }
         
-        stage('Clone Repository as Zip') {
+        stage('Clone Repository') {
+            steps {
+                sh 'git clone --depth 1 https://github.com/Meenakshi0812/zip-application.git zip-application'
+            }
+        }
+        
+        stage('Create Zip') {
             steps {
                 script {
                     def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
-                    sh 'git clone --depth 1 https://github.com/Meenakshi0812/zip-application.git zip-application'
-                    sh "zip -r ${folderName}.zip zip-application"
+                    sh "tar -czf ${folderName}.tar.gz zip-application"
                 }
             }
         }
@@ -23,7 +28,7 @@ pipeline {
                 script {
                     def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
                     sh "mkdir -p /var/www/html/${folderName}"
-                    sh "unzip ${folderName}.zip -d /var/www/html/${folderName}"
+                    sh "tar -xzf ${folderName}.tar.gz -C /var/www/html/${folderName}"
                 }
             }
         }
