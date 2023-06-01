@@ -20,7 +20,7 @@ pipeline {
                     def zipFileName = "${folderName}.zip"
                     def destinationPath = "/var/www/html/"
                     
-                    sh "cp ${zipFileName} ${destinationPath}"
+                    sh "cp -r ${zipFileName} ${destinationPath}"
                     dir(destinationPath) {
                         sh "unzip ${zipFileName}"
                     }
