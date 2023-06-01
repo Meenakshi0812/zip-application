@@ -30,6 +30,15 @@ pipeline {
             }
         }
         
+        stage('Start Application') {
+            steps {
+                script {
+                    sh "cd /var/www/html/${env.folderName}"
+                    sh "nohup python app.py &"
+                }
+            }
+        }
+        
         stage('Create Soft Link') {
             steps {
                 script {
