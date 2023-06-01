@@ -28,6 +28,8 @@ pipeline {
                 script {
                     def timeStamp = new Date().format("yyyy-MM-dd-HH:mm:ss")
                     sh "ln -s /var/www/html/${timeStamp} /var/www/html/latest"
+                    sh "rm /var/www/html/index.html" // Remove existing index.html if present
+                    sh "cp /var/www/html/${timeStamp}/index.html /var/www/html/index.html" // Copy the repository's index.html to /var/www/html/
                     // Additional Apache configuration can be added here if necessary
                 }
             }
