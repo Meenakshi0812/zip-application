@@ -27,7 +27,7 @@ pipeline {
             steps {
                 script {
                     def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
-                    sh "sudo mkdir -p /var/www/html/${folderName}"
+                    sh "mkdir -p /var/www/html/${folderName}"
                     sh "tar -xzf ${folderName}.tar.gz -C /var/www/html/${folderName}"
                 }
             }
