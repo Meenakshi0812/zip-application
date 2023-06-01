@@ -1,7 +1,10 @@
-stage('Create Sample index.html') {
-    steps {
-        script {
-            sh "echo '<html><body><h1>Welcome to my website!</h1></body></html>' > /var/www/html/${timeStamp}/index.html"
-        }
-    }
-}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to My Website</title>
+</head>
+<body>
+    <h1>Welcome to My Website!</h1>
+    <p>This is a sample index.html page.</p>
+</body>
+</html>
