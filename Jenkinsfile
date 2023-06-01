@@ -2,6 +2,13 @@ pipeline {
     agent any
     
     stages {
+        stage('Clean Workspace') {
+            steps {
+                // Remove existing app.zip file
+                sh 'rm -rf app.zip'
+            }
+        }
+        
         stage('Clone and Unzip') {
             steps {
                 // Clone the repository as a zip file
