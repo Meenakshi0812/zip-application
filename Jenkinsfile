@@ -1,22 +1,23 @@
 pipeline {
     agent any
     
-    environment {
-        folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
-    }
-    
     stages {
-        stage('Clean Workspace') {
+        stage('Clone Repository') {
             steps {
-                sh 'rm -rf zip-application'
+                script {
+                    def timeStamp = new Date().format('yyyyMMddHHmmss')
+                    sh "git clone https://github.com/Meenakshi0812/zip-application.git ${timeStamp}.zip"
+                }
             }
         }
         
-        stage('Clone Repository as Zip') {
+        stage('Copy and Unzip') {
             steps {
                 script {
-                    sh 'git clone --depth 1 https://github.com/Meenakshi0812/zip-application.git zip-application'
-                    sh "zip -r ${env.folderName}.zip zip-application"
+                    sh "cp ${timeStamp}.zip /var/www/html/"
+                    dir("/var/www/html/") {
+                        sh "unzip ${timeStamp}.zip"
+                    }
                 }
             }
         }
@@ -24,21 +25,8 @@ pipeline {
         stage('Deploy to Apache') {
             steps {
                 script {
-                    sh "mkdir -p /var/www/html/${env.folderName}"
-                    sh "unzip ${env.folderName}.zip -d /var/www/html/${env.folderName}"
-                    sh "sudo cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/${env.folderName}.conf"
-                    sh "sudo sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/${env.folderName}|' /etc/apache2/sites-available/${env.folderName}.conf"
-                    sh "sudo sed -i 's|</VirtualHost>|    ProxyPass / http://127.0.0.1:5000/\n    ProxyPassReverse / http://127.0.0.1:5000/\n</VirtualHost>|' /etc/apache2/sites-available/${env.folderName}.conf"
-                    sh "sudo a2ensite ${env.folderName}.conf"
-                    sh "sudo systemctl restart apache2"
-                }
-            }
-        }
-        
-        stage('Create Soft Link') {
-            steps {
-                script {
-                    sh "sudo ln -s /var/www/html/${env.folderName} /var/www/html/current"
+                    sh "ln -s /var/www/html/${timeStamp} /var/www/html/latest"
+                    // Additional Apache configuration can be added here if necessary
                 }
             }
         }
