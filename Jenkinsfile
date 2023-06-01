@@ -1,6 +1,10 @@
 pipeline {
     agent any
     
+    environment {
+        folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
+    }
+    
     stages {
         stage('Clean Workspace') {
             steps {
@@ -8,17 +12,11 @@ pipeline {
             }
         }
         
-        stage('Clone Repository') {
-            steps {
-                sh 'git clone --depth 1 https://github.com/Meenakshi0812/zip-application.git zip-application'
-            }
-        }
-        
-        stage('Create Zip') {
+        stage('Clone Repository as Zip') {
             steps {
                 script {
-                    def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
-                    sh "tar -czf ${folderName}.tar.gz zip-application"
+                    sh 'git clone --depth 1 https://github.com/Meenakshi0812/zip-application.git zip-application'
+                    sh "zip -r ${env.folderName}.zip zip-application"
                 }
             }
         }
@@ -26,9 +24,8 @@ pipeline {
         stage('Deploy to Apache') {
             steps {
                 script {
-                    def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
-                    sh "mkdir -p /var/www/html/${folderName}"
-                    sh "tar -xzf ${folderName}.tar.gz -C /var/www/html/${folderName}"
+                    sh "mkdir -p /var/www/html/${env.folderName}"
+                    sh "unzip ${env.folderName}.zip -d /var/www/html/${env.folderName}"
                 }
             }
         }
@@ -36,8 +33,7 @@ pipeline {
         stage('Create Soft Link') {
             steps {
                 script {
-                    def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
-                    sh "ln -s /var/www/html/${folderName} /var/www/html/current"
+                    sh "ln -s /var/www/html/${env.folderName} /var/www/html/current"
                 }
             }
         }
