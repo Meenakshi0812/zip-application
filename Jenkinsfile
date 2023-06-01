@@ -16,7 +16,7 @@ pipeline {
                     def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
                 
                     // Move app.py to /var/www/html/<folderName>
-                    sh "mv zip-application/app.py /var/www/html/${folderName}"
+                    sh "sudo mv zip-application/app.py /var/www/html/${folderName}"
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
         stage('Create Soft Link') {
             steps {
                 // Create soft link for the deployed code
-                sh "ln -s /var/www/html/${folderName} /var/www/html/current"
+                sh "sudo ln -s /var/www/html/${folderName} /var/www/html/current"
             }
         }
     }
