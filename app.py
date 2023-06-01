@@ -1,12 +1,12 @@
-import datetime
+from flask import Flask
 
-def main():
-    current_time = datetime.datetime.now()
-    folder_name = current_time.strftime("%Y%m%d%H%M%S")
-    
-    print("Folder Name:", folder_name)
-    # Rest of your application code goes here
-    
-if __name__ == "__main__":
-    main()
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return 'Hello, World!'
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
 
