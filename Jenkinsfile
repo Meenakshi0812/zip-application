@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     def timeStamp = new Date().format("yyyy-MM-dd-HH:mm:ss")
-                    sh "git clone https://github.com/example/repository.git ${timeStamp}.zip"
+                    sh "git clone https://github.com/Meenakshi0812/zip-application.git ${timeStamp}.zip"
                 }
             }
         }
