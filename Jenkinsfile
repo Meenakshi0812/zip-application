@@ -17,7 +17,7 @@ pipeline {
                 script {
                     def timeStamp = new Date().format("yyyy-MM-dd-HH-mm-ss")
                     def folderName = timeStamp
-                    def sourcePath = "${folderName}/${folderName}.zip"
+                    def sourcePath = "${folderName}.zip"
                     def destinationPath = "/var/www/html/${folderName}/"
 
                     sh "cp ${sourcePath} ${destinationPath}"
