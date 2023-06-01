@@ -17,14 +17,13 @@ pipeline {
                 script {
                     def timeStamp = new Date().format("yyyy-MM-dd-HH-mm-ss")
                     def folderName = timeStamp
-                    def zipFileName = "${folderName}.zip"
-                    def sourcePath = "${folderName}/${zipFileName}"
+                    def sourcePath = "${folderName}/${folderName}.zip"
                     def destinationPath = "/var/www/html/${folderName}/"
 
                     sh "cp ${sourcePath} ${destinationPath}"
                     dir(destinationPath) {
-                        sh "unzip ${zipFileName}"
-                        sh "rm ${zipFileName}"
+                        sh "unzip ${folderName}.zip"
+                        sh "rm ${folderName}.zip"
                     }
                 }
             }
