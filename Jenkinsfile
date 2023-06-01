@@ -2,6 +2,13 @@ pipeline {
     agent any
     
     stages {
+        stage('Clean Workspace') {
+            steps {
+                // Remove existing zip-application directory
+                sh 'rm -rf zip-application'
+            }
+        }
+        
         stage('Clone Repository') {
             steps {
                 // Clone the repository
