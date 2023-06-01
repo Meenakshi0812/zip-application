@@ -2,31 +2,28 @@ pipeline {
     agent any
     
     stages {
-        stage('Clean Workspace') {
+        stage('Clone Repository') {
             steps {
-                // Remove existing app.zip file
-                sh 'rm -rf app.zip'
+                // Clone the repository
+                sh 'git clone --depth 1 https://github.com/Meenakshi0812/zip-application.git'
             }
         }
         
-        stage('Clone and Unzip') {
+        stage('Deploy to Apache') {
             steps {
-                // Clone the repository as a zip file
-                sh 'git clone --depth 1 https://github.com/Meenakshi0812/zip-application.git app.zip'
-                
                 // Generate folder name based on timestamp
                 script {
                     def folderName = sh(script: 'date +"%Y%m%d%H%M%S"', returnStdout: true).trim()
                 
-                    // Unzip the code to www/var/html path
-                    sh "unzip -q app.zip -d /var/www/html/${folderName}"
+                    // Move app.py to /var/www/html/<folderName>
+                    sh "mv zip-application/app.py /var/www/html/${folderName}"
                 }
             }
         }
         
         stage('Create Soft Link') {
             steps {
-                // Create soft link for the pulled code
+                // Create soft link for the deployed code
                 sh "ln -s /var/www/html/${folderName} /var/www/html/current"
             }
         }
